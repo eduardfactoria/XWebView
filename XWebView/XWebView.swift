@@ -108,13 +108,11 @@ extension WKWebView {
             let selector = Selector("loadFileURL:allowingReadAccessToURL:")
             let method = class_getInstanceMethod(self, Selector("_loadFileURL:allowingReadAccessToURL:"))
             assert(method != nil)
-            if class_addMethod(self, selector, method_getImplementation(method), method_getTypeEncoding(method)) {
-                print("<XWV> INFO: Platform is iOS 8.x")
-                method_exchangeImplementations(
-                    class_getInstanceMethod(self, Selector("loadHTMLString:baseURL:")),
-                    class_getInstanceMethod(self, Selector("_loadHTMLString:baseURL:"))
-                )
-            }
+            class_replaceMethod(self, selector, method_getImplementation(method), method_getTypeEncoding(method));
+            method_exchangeImplementations(
+                class_getInstanceMethod(self, Selector("loadHTMLString:baseURL:")),
+                class_getInstanceMethod(self, Selector("_loadHTMLString:baseURL:"))
+            )
         }
     }
 
